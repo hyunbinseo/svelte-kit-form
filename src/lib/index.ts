@@ -1,5 +1,4 @@
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
-import { tick } from 'svelte';
 import type { createFormState } from './index.svelte.js';
 
 // NOTE The generated SubmitFunction type
@@ -29,7 +28,6 @@ type Options<A extends ActionResult> = Partial<
 		disableSubmitter: boolean;
 		formState: ReturnType<typeof createFormState>;
 		submittedCallback: ChangeReturnType<SubmitFunction, void>;
-		completedCallback: ReturnCallback<A>;
 	} & (
 		| {
 				updateOptions: { reset?: boolean; invalidateAll?: boolean };
@@ -64,9 +62,5 @@ export const createSubmitFunction = <A extends ActionResult>(options: Options<A>
 			await (o.respondedCallback ? o.respondedCallback(o2) : opts.update(o.updateOptions));
 			if (o.disableSubmitter) disableSubmitter(input.submitter, false);
 			o.formState && (o.formState.is = 'submitted');
-			if (o.completedCallback) {
-				await tick(); // Wait for the form prop to be updated.
-				await o.completedCallback(o2);
-			}
 		};
 	}) satisfies SubmitFunction;
