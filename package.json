@@ -1,5 +1,6 @@
 {
-	"name": "svelte-kit-form",
+	"name": "svelte-form-enhanced",
+	"description": "SvelteKit use:enhance helper library. Automatically manage form state, delay page update, disable submitter, and much more.",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
@@ -48,5 +49,20 @@
 	"svelte": "./dist/index.svelte.js",
 	"types": "./dist/index.svelte.d.ts",
 	"type": "module",
+	"keywords": [
+		"Svelte",
+		"SvelteKit",
+		"form"
+	],
+	"author": "Hyunbin Seo",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hyunbinseo/svelte-form-enhanced.git"
+	},
+	"bugs": {
+		"url": "https://github.com/hyunbinseo/svelte-form-enhanced/issues"
+	},
+	"homepage": "https://github.com/hyunbinseo/svelte-form-enhanced#readme",
 	"packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276"
 }
