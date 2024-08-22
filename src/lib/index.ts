@@ -23,14 +23,24 @@ type Opts = Parameters<Exclude<Awaited<ReturnType<SubmitFunction>>, void>>[0];
 
 type ReturnCallback<A extends ActionResult> = (opts: Omit<Opts, 'result'> & { result: A }) => void;
 
-type Options<A extends ActionResult> = Partial<{
-	delay: number;
-	disableSubmitter: boolean;
-	formState: ReturnType<typeof createFormState>;
-	submittedCallback: ChangeReturnType<SubmitFunction, void>;
-	respondedCallback: ReturnCallback<A>;
-	completedCallback: ReturnCallback<A>;
-}>;
+type Options<A extends ActionResult> = Partial<
+	{
+		delay: number;
+		disableSubmitter: boolean;
+		formState: ReturnType<typeof createFormState>;
+		submittedCallback: ChangeReturnType<SubmitFunction, void>;
+		completedCallback: ReturnCallback<A>;
+	} & (
+		| {
+				updateOptions: { reset?: boolean; invalidateAll?: boolean };
+				respondedCallback?: never;
+		  }
+		| {
+				updateOptions?: never;
+				respondedCallback: ReturnCallback<A>;
+		  }
+	)
+>;
 
 const submitterCanBeDisabled = (submitter: HTMLElement | null) =>
 	// Reference https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/submitter
@@ -51,7 +61,7 @@ export const createSubmitFunction = <A extends ActionResult>(options: Options<A>
 		return async (opts: Opts) => {
 			if (timer) await timer;
 			const o2 = { ...opts, result: opts.result as A } satisfies Parameters<ReturnCallback<A>>[0];
-			await (o.respondedCallback ? o.respondedCallback(o2) : opts.update());
+			await (o.respondedCallback ? o.respondedCallback(o2) : opts.update(o.updateOptions));
 			if (o.disableSubmitter) disableSubmitter(input.submitter, false);
 			o.formState && (o.formState.is = 'submitted');
 			if (o.completedCallback) {
