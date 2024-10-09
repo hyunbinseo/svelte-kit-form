@@ -55,12 +55,12 @@ export const createSubmitFunction = <A extends ActionResult>(options: Options<A>
 		if (o.disableSubmitter) disableSubmitter(input.submitter);
 		const timer = o.delay && new Promise((resolve) => setTimeout(resolve, o.delay));
 		await o.submittedCallback?.(input); // TODO Form submission can be canceled.
-		o.formState && (o.formState.is = 'submitting');
+		if (o.formState) o.formState.is = 'submitting';
 		return async (opts: Opts) => {
 			if (timer) await timer;
 			const o2 = { ...opts, result: opts.result as A } satisfies Parameters<ReturnCallback<A>>[0];
 			await (o.respondedCallback ? o.respondedCallback(o2) : opts.update(o.updateOptions));
 			if (o.disableSubmitter) disableSubmitter(input.submitter, false);
-			o.formState && (o.formState.is = 'submitted');
+			if (o.formState) o.formState.is = 'submitted';
 		};
 	}) satisfies SubmitFunction;
